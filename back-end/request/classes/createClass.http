@@ -1,0 +1,16 @@
+POST http://localhost:3333/classes HTTP/1.1
+content-type: application/json
+
+{
+  "name":"Pedro Henrique",
+  "avatar":"aefga",
+  "whatsapp":"asefa",
+  "bio":"asef",
+  "subject":"Matemática",
+  "cost":80,
+  "schedule":[
+    { "week_day":1, "from": "8:00","to":"12:00"},
+    { "week_day":3, "from": "10:00","to":"18:00"},
+    { "week_day":4, "from": "8:00","to":"12:00"}
+  ]
+}

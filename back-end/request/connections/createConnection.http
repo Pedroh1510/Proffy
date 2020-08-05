@@ -1,0 +1,6 @@
+POST http://localhost:3333/connections
+Content-Type: application/json
+
+{
+  "user_id":"28ff6e21-a08e-4d48-912c-ca15d9421249"
+}
