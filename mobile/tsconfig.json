@@ -1,12 +1,16 @@
 {
   "compilerOptions": {
+    "esModuleInterop":true,
+    "target": "es2017",
+    "module": "CommonJS",
     "allowSyntheticDefaultImports": true,
     "jsx": "react-native",
-    "lib": ["dom", "esnext"],
+    "lib": ["es6"],
     "moduleResolution": "node",
     "noEmit": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "strict": true
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
   }
 }

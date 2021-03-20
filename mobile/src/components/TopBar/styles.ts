@@ -16,11 +16,13 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     borderBottomWidth: 1,
     borderBottomColor: "#6842C2",
-    marginBottom: 41,
   },
   header: {
     flexDirection: "row",
+    // alignItems: "center",
+    // paddingHorizontal: 32,
     justifyContent: "space-between",
+    // paddingBottom: 80,
   },
   title: {
     fontFamily: "Archivo_700Bold",
