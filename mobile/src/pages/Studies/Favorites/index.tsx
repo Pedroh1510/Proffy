@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { View, ScrollView, Text } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
+import React, { useState } from "react";
+import { ScrollView, Text, View } from "react-native";
 
 import TeacherItem, { Teacher } from "../../../components/TeacherItem";
-
-import styles from "./styles";
 import TopBar from "../../../components/TopBar";
+import styles from "./styles";
 
 const Favorites: React.FC = () => {
   const [favorites, setFavorites] = useState([]);

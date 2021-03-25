@@ -1,7 +1,6 @@
-import { ClassScheduleTypeOrm } from './ClassScheduleTypeOrm';
-import { ClassesTypeOrm } from './ClassesTypeOrm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
+
 import { Users } from './../../Users';
-import { Column, PrimaryColumn, Entity, OneToMany } from 'typeorm';
 
 @Entity('users')
 export class UsersTypeOrm implements Users {
@@ -14,12 +13,15 @@ export class UsersTypeOrm implements Users {
 	@Column()
 	name: string;
 
-	@Column()
-	bio: string;
+	@Column({ nullable: true })
+	bio?: string;
 
-	@Column()
-	whatsapp: string;
+	@Column({ nullable: true })
+	whatsapp?: string;
 
-	@Column()
-	avatar: string;
+	@Column({ nullable: true })
+	avatar?: string;
+
+	@Column({ nullable: true })
+	isProffy?: boolean;
 }

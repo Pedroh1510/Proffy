@@ -12,8 +12,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 8,
   },
+  buttonDisable: {
+    backgroundColor: "#DCDCE5",
+    height: 58,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+  },
   buttonText: {
     color: "#fff",
+    fontSize: 16,
+    fontFamily: "Archivo_700Bold",
+  },
+  buttonTextDisable: {
+    color: "#9C98A6",
     fontSize: 16,
     fontFamily: "Archivo_700Bold",
   },

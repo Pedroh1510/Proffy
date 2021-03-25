@@ -1,9 +1,15 @@
 export interface ICreateClassRequest {
+	userId: string;
 	name: string;
-	avatar: string;
-	whatsapp: string;
 	bio: string;
-	subject: string;
+	whatsapp: string;
+	avatar: string;
+	isProffy: boolean;
 	cost: number;
-	schedule: [{ week_day: number; from: string; to: string }];
+	subject: string;
+	schedule: {
+		week_day: number;
+		from: number;
+		to: number;
+	}[];
 }

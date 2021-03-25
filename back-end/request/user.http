@@ -1,0 +1,38 @@
+POST http://localhost:3333/register HTTP/1.1
+content-type: application/json
+
+{
+  "name":"teste user",
+  "email": "user@test.com",
+  "password": "Test0-"
+}
+
+###
+POST http://localhost:3333/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "user@test.com",
+  "password": "Test0-"
+}
+
+###
+PUT http://localhost:3333/classes HTTP/1.1
+content-type: application/json
+
+{
+  "userId":"e46172a4-6bcb-40f9-8206-6de207dc432f",
+  "name":"Pedro user",
+  "avatar":"aefga",
+  "whatsapp":"asefa",
+  "bio":"asef",
+  "isProffy":false
+}
+
+###
+DELETE  http://localhost:3333/delete HTTP/1.1
+content-type: application/json
+
+{
+  "userId":"3598d2e1-aa49-48e0-938a-7f491402dc97"
+}

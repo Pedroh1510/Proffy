@@ -5,6 +5,7 @@ export class ClassSchedule {
 	public week_day: number;
 	public from: number;
 	public to: number;
+	public subjectId: string;
 	constructor(props: Omit<ClassSchedule, 'id'>) {
 		Object.assign(this, props);
 		if (!this.id) {

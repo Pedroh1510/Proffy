@@ -1,67 +1,19 @@
-import React, { useState } from "react";
-import { View, ScrollView, Text, TextInput } from "react-native";
-import { BorderlessButton, RectButton } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-community/async-storage";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { ScrollView, Text, View } from "react-native";
+import { BorderlessButton, RectButton } from "react-native-gesture-handler";
 
-import TeacherItem, { Teacher } from "../../../components/TeacherItem";
-import { api } from "../../../services/api";
-
-import styles from "./styles";
-import TopBar from "../../../components/TopBar";
 import Dropdown from "../../../components/Dropdown";
+import TeacherItem, { Teacher } from "../../../components/TeacherItem";
+import TopBar from "../../../components/TopBar";
+import { api } from "../../../services/api";
 import { SUBJECTS } from "../../../utils/constants";
-
-const example: Teacher = {
-  user: {
-    avatar: "aaa",
-    bio: "aaaa",
-    id: "1",
-    name: "Pedro",
-    whatsapp: "1111111",
-  },
-  cost: 2,
-  subject: "Math",
-  classes: [
-    {
-      weekDay: "2",
-      from: "8",
-      to: "9",
-    },
-    {
-      weekDay: "1",
-      from: "9",
-      to: "10",
-    },
-  ],
-};
-
-const example2: Teacher = {
-  user: {
-    avatar: "aaa",
-    bio: "aaaa",
-    id: "2",
-    name: "Pedro",
-    whatsapp: "1111111",
-  },
-  cost: 2,
-  subject: "Math",
-  classes: [
-    {
-      weekDay: "2",
-      from: "8",
-      to: "9",
-    },
-    {
-      weekDay: "1",
-      from: "9",
-      to: "10",
-    },
-  ],
-};
+import styles from "./styles";
 
 const TeacherList: React.FC = () => {
-  const [teachers, setTeachers] = useState([example, example2]);
+  const [teachers, setTeachers] = useState([]);
   const [isFiltersVisible, setIsFiltersVisible] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
 
@@ -83,6 +35,20 @@ const TeacherList: React.FC = () => {
       }
     });
   }
+
+  useEffect(() => {
+    axios
+      .get("https://run.mocky.io/v3/12e5332e-9035-451b-ba60-944804630f10")
+      .then((response) => {
+        const data = response.data;
+
+        setTeachers(data);
+      });
+    // api.get("connections").then((response) => {
+    //   const { total } = response.data;
+    //   setTotalConnections(total);
+    // });
+  });
 
   function handleToggleFiltersVisible() {
     setIsFiltersVisible(!isFiltersVisible);
@@ -170,7 +136,7 @@ const TeacherList: React.FC = () => {
         <View style={styles.teacherList}>
           {teachers.map((teacher: Teacher) => (
             <TeacherItem
-              key={teacher.user.id}
+              key={teacher.user.name}
               teacher={teacher}
               favorited={favorites.includes(teacher.user.id)}
             />

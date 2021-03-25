@@ -1,12 +1,15 @@
+import { resolve } from 'path';
+
 import { ConnectionOptions } from 'typeorm';
+
 import {
-	ClassesTypeOrm,
 	ClassScheduleTypeOrm,
-	UsersTypeOrm,
+	ClassesTypeOrm,
 	ConnectionsTypeOrm,
+	UserLoginTypeOrm,
+	UsersTypeOrm
 } from './../../../../entities/implementations/TypeOrm';
 
-import { resolve } from 'path';
 export const sqliteTypeOrmConnection: ConnectionOptions = {
 	type: 'sqlite',
 	database: resolve(
@@ -24,6 +27,7 @@ export const sqliteTypeOrmConnection: ConnectionOptions = {
 		ClassScheduleTypeOrm,
 		UsersTypeOrm,
 		ConnectionsTypeOrm,
+		UserLoginTypeOrm
 	],
-	synchronize: true,
+	synchronize: true
 };

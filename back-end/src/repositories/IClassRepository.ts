@@ -1,4 +1,5 @@
-import { Classes, Users, ClassSchedule } from './../entities';
+import { ClassSchedule, Classes, Users } from './../entities';
+import { ProffyProps, ScheduleItemProps, UserProps } from './ILoginRepository';
 
 export interface IClassSaveDataRepository {
 	classes: Classes;
@@ -11,26 +12,23 @@ export interface IClassFilterDataRepository {
 	time: number;
 }
 
-export interface IClassListDataRepository {
+interface ProffyUpdateProps {
 	id: string;
 	cost: number;
 	subject: string;
-	user: {
-		id: string;
-		name: string;
-		bio: string;
-		whatsapp: string;
-		avatar: string;
-	};
-	schedules: {
-		id: string;
-		week_day: number;
-		from: number;
-		to: number;
-	}[];
+	classes: ClassSchedule[];
+}
+
+export interface IClassListDataRepository {
+	user: UserProps;
+	proffy: ProffyUpdateProps;
 }
 
 export interface IClassRepository {
 	save(data: IClassSaveDataRepository): Promise<void>;
 	filter(data: IClassFilterDataRepository): Promise<IClassListDataRepository[]>;
+	filterUserById(id: string): Promise<Users>;
+	filterClassByUserId(id: string): Promise<Classes>;
+	updateOnlyUser(user: Users): Promise<void>;
+	update(data: IClassListDataRepository): Promise<void>;
 }

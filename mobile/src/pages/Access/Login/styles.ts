@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
   inputTextPass: {
     marginVertical: 10,
     marginLeft: 20,
+    width: "85%",
   },
   button: {
     justifyContent: "center",

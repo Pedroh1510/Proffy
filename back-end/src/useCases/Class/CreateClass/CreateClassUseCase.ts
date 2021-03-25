@@ -1,27 +1,47 @@
 import { convertToMinutes } from './../../../utils/convertToMinutes';
-import { ICreateClassRequest } from './CreateClassDTO';
+import { makeObjScheduleItems } from './../../../utils/functions';
+import { ClassSchedule, Classes, Users } from '../../../entities';
 import { IClassRepository } from '../../../repositories/IClassRepository';
-import { Users, Classes, ClassSchedule } from '../../../entities';
+import { ICreateClassRequest } from './CreateClassDTO';
 
 export class CreateClassUseCase {
 	constructor(private classRepository: IClassRepository) {}
 	async execute(data: ICreateClassRequest): Promise<void> {
-		const { name, whatsapp, bio, avatar, cost, schedule, subject } = data;
-		const user = new Users({ avatar, bio, name, whatsapp });
+		const {
+			userId,
+			avatar,
+			bio,
+			name,
+			whatsapp,
+			isProffy,
+			cost,
+			schedule,
+			subject
+		} = data;
 
-		const classFromUser = new Classes({ cost, subject });
+		if (!userId) throw new Error('Missing param "userId"');
+		if (!avatar) throw new Error('Missing param "avatar"');
+		if (!bio) throw new Error('Missing param "bio"');
+		if (!name) throw new Error('Missing param "name"');
+		if (!whatsapp) throw new Error('Missing param "whatsapp"');
+		if (isProffy === undefined) throw new Error('Missing param "isProffy"');
+		if (!cost) throw new Error('Missing param "cost"');
+		if (!schedule) throw new Error('Missing param "schedule"');
+		if (!subject) throw new Error('Missing param "subject"');
 
-		const classSchedule = schedule.map((scheduleItem) => {
-			const from = convertToMinutes(scheduleItem.from);
-			const to = convertToMinutes(scheduleItem.to);
-			const week_day = scheduleItem.week_day;
-			return new ClassSchedule({ from, to, week_day });
-		});
+		if (isProffy) throw new Error('is already a teacher');
+
+		const user = await this.classRepository.filterUserById(userId);
+
+		if (!user) throw new Error('Invalid userId');
+
+		user.isProffy = true;
+		const classFromUser = new Classes({ cost, subject, userId });
 
 		await this.classRepository.save({
 			classes: classFromUser,
 			user,
-			schedule: classSchedule,
+			schedule: makeObjScheduleItems(schedule, classFromUser.id)
 		});
 	}
 }

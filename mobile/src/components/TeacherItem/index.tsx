@@ -12,18 +12,25 @@ import { api } from "../../services/api";
 import WeekDay from "../WeekDay";
 
 export interface Teacher {
-  user: {
-    id: string;
-    name: string;
-    avatar: string;
-    whatsapp: string;
-    bio: string;
-  };
+  user: UserPros;
+  proffy: ProffyProps;
+}
+
+export interface UserPros {
+  id: string;
+  name: string;
+  avatar: string;
+  whatsapp: string;
+  bio: string;
+}
+
+export interface ProffyProps {
   subject: string;
   cost: number;
   classes: ClassesProps[];
 }
-interface ClassesProps {
+
+export interface ClassesProps {
   weekDay: string;
   from: string;
   to: string;
@@ -83,7 +90,7 @@ const TeacherItem: React.FC<TeacherItemProps> = ({ teacher, favorited }) => {
   }
 
   function getClasses() {
-    const classes: ClassesProps[] = teacher.classes;
+    const classes: ClassesProps[] = teacher.proffy.classes;
     const a = [];
 
     for (let index = 1; index < 6; index++) {
@@ -117,7 +124,7 @@ const TeacherItem: React.FC<TeacherItemProps> = ({ teacher, favorited }) => {
 
         <View style={styles.profileInfo}>
           <Text style={styles.name}>{teacher.user.name}</Text>
-          <Text style={styles.subject}>{teacher.subject}</Text>
+          <Text style={styles.subject}>{teacher.proffy.subject}</Text>
         </View>
       </View>
 
@@ -134,7 +141,7 @@ const TeacherItem: React.FC<TeacherItemProps> = ({ teacher, favorited }) => {
       <View style={styles.footer}>
         <Text style={styles.price}>
           Preço/hora {"   "}
-          <Text style={styles.priceValue}>R$ {teacher.cost}</Text>
+          <Text style={styles.priceValue}>R$ {teacher.proffy.cost}</Text>
         </Text>
         <View style={styles.buttonsContainer}>
           <RectButton

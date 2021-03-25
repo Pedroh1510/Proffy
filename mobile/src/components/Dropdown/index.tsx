@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text } from "react-native";
 import DropDownPicker, {
   DropDownPickerProps,
@@ -6,9 +6,10 @@ import DropDownPicker, {
 
 import { styles } from "./styles";
 
-interface DropDownObj {
+export interface DropDownObj {
   label: string;
   value: number;
+  selected?: boolean;
 }
 
 interface DropDownProps extends DropDownPickerProps {
@@ -23,7 +24,6 @@ const Dropdown: React.FC<DropDownProps> = ({
   placeholder,
   ...rest
 }) => {
-  const [selectedItem, setSelectedItem] = useState("Selecione");
   return (
     <View style={styles.container}>
       {title && <Text style={styles.text}>{title}</Text>}
@@ -33,7 +33,6 @@ const Dropdown: React.FC<DropDownProps> = ({
         items={items}
         style={styles.input}
         itemStyle={styles.dropdownItem}
-        onChangeItem={(item) => setSelectedItem(item.value)}
         {...rest}
       />
     </View>

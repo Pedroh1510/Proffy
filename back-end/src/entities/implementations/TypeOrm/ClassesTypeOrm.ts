@@ -1,15 +1,16 @@
-import { UsersTypeOrm } from './UsersTypeOrm';
-import { ClassScheduleTypeOrm } from './ClassScheduleTypeOrm';
-import { Classes } from './../../Classes';
 import {
 	Column,
-	PrimaryColumn,
 	Entity,
-	OneToMany,
-	ManyToOne,
-	JoinTable,
 	JoinColumn,
+	JoinTable,
+	ManyToOne,
+	OneToMany,
+	PrimaryColumn
 } from 'typeorm';
+
+import { Classes } from './../../Classes';
+import { ClassScheduleTypeOrm } from './ClassScheduleTypeOrm';
+import { UsersTypeOrm } from './UsersTypeOrm';
 
 @Entity('classes')
 export class ClassesTypeOrm implements Classes {
@@ -30,4 +31,7 @@ export class ClassesTypeOrm implements Classes {
 
 	@ManyToOne(() => UsersTypeOrm, (user) => user.id)
 	user_id: UsersTypeOrm;
+
+	@Column()
+	userId: string;
 }

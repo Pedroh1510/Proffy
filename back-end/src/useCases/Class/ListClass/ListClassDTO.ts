@@ -1,17 +1,16 @@
+import {
+	ProffyProps,
+	UserProps
+} from './../../../repositories/ILoginRepository';
+
 export interface IListRequest {
-	week_day: string;
+	week_day: number;
 	subject: string;
-	time: string;
+	time: number;
 }
 
 export interface IListResponse {
-	id: number;
-	subject: string;
-	cost: string;
-	user_id: string;
-	name: string;
-	avatar: string;
-	whatsapp: string;
-	bio: string;
+	user: UserProps;
+	proffy: ProffyProps;
 }
 [];

@@ -1,11 +1,11 @@
-import React from "react";
-import { View, ImageBackground, Text } from "react-native";
-import { RectButton } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-
-import { styles } from "./styles";
+import React from "react";
+import { ImageBackground, Text, View } from "react-native";
+import { RectButton } from "react-native-gesture-handler";
 
 import giveClassesBgImg from "../../assets/images/give-classes-background.png";
+import { eraseLogin } from "../../services/storage";
+import { styles } from "./styles";
 
 interface OkPageProps {
   button: {
@@ -21,8 +21,9 @@ interface OkPageProps {
 const OkPage: React.FC<OkPageProps> = ({ button, content }) => {
   const { navigate } = useNavigation();
 
-  function handleNavigateBack() {
-    navigate(button.source);
+  async function handleNavigateBack() {
+    await eraseLogin();
+    navigate("Login");
   }
   return (
     <View style={styles.container}>

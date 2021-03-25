@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Image, Text } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { RectButton } from "react-native-gesture-handler";
+import axios from "axios";
 
 import { styles } from "./styles";
 
@@ -14,16 +15,29 @@ import heartIcon from "../../assets/images/icons/heart.png";
 import profileImg from "../../assets/profile.png";
 
 import { api } from "../../services/api";
+import { eraseLogin, getData } from "../../services/storage";
+import { ProfileProps } from "../Profile";
+import { logout } from "../../utils/functions";
 
 const Landing: React.FC = () => {
   const { navigate } = useNavigation();
   const [totalConnections, setTotalConnections] = useState(0);
+  const [profile, setProfile] = useState<ProfileProps>();
 
   useFocusEffect(() => {
-    api.get("connections").then((response) => {
-      const { total } = response.data;
-      setTotalConnections(total);
+    getData().then((data) => {
+      setProfile(data);
     });
+    axios
+      .get("https://run.mocky.io/v3/7fedf0a0-21b4-4170-92b4-603722807d0e")
+      .then((response) => {
+        const { total } = response.data;
+        setTotalConnections(total);
+      });
+    // api.get("connections").then((response) => {
+    //   const { total } = response.data;
+    //   setTotalConnections(total);
+    // });
   });
 
   function handleNavigationToGiveClassesPage() {
@@ -38,6 +52,11 @@ const Landing: React.FC = () => {
     navigate("Profile");
   }
 
+  async function handleLogout() {
+    await eraseLogin();
+    navigate("Login");
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -49,13 +68,22 @@ const Landing: React.FC = () => {
         >
           <Image
             style={styles.profileImg}
-            source={profileImg}
+            source={
+              profile?.user.avatar !== "a" ? profile?.user.avatar : profileImg
+            }
             resizeMode="contain"
           />
-          <Text style={styles.profileText}>Pedro Henrique</Text>
+          <Text style={styles.profileText}>
+            {profile?.user.name && profile?.user.name}
+          </Text>
         </RectButton>
 
-        <RectButton style={styles.logout}>
+        <RectButton
+          style={styles.logout}
+          onPress={() => {
+            handleLogout();
+          }}
+        >
           <AntDesign name="poweroff" size={24} color="white" />
         </RectButton>
       </View>

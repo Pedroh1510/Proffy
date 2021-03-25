@@ -1,17 +1,17 @@
+import { getManager } from 'typeorm';
+
+import { Users } from './../../../entities';
 import {
 	ClassScheduleTypeOrm,
-	UsersTypeOrm,
 	ClassesTypeOrm,
+	UsersTypeOrm
 } from './../../../entities/implementations/TypeOrm';
-
 import {
-	IClassRepository,
-	IClassSaveDataRepository,
 	IClassFilterDataRepository,
 	IClassListDataRepository,
+	IClassRepository,
+	IClassSaveDataRepository
 } from './../../IClassRepository';
-
-import { getManager } from 'typeorm';
 import { typeOrmHelper } from './helper/typeOrmHelper';
 
 export class ClassRepositoryTypeOrm implements IClassRepository {
@@ -36,6 +36,7 @@ export class ClassRepositoryTypeOrm implements IClassRepository {
 			await transactionEntityManager.save(schedules);
 		});
 	}
+
 	async filter(
 		data: IClassFilterDataRepository
 	): Promise<IClassListDataRepository[]> {
@@ -45,7 +46,8 @@ export class ClassRepositoryTypeOrm implements IClassRepository {
 		const classesFilteredEntity = await connection
 			.getRepository(ClassesTypeOrm)
 			.createQueryBuilder('classes')
-			.leftJoinAndSelect('classes.user_id', 'users')
+			.andWhere('classes.subject <=> ', { subject })
+			.innerJoinAndSelect('classes.user_id', 'users')
 			.leftJoinAndSelect('classes.schedules', 'schedules')
 			.where('schedules.week_day = :week_day', { week_day })
 			.andWhere('schedules.from <=:time', { time })
@@ -53,21 +55,66 @@ export class ClassRepositoryTypeOrm implements IClassRepository {
 			.getMany();
 
 		const classesFiltered = classesFilteredEntity.map((classesEntity) => {
-			const { id, cost, subject } = classesEntity;
+			const { cost, subject } = classesEntity;
 			const user = { ...classesEntity.user_id };
 			const schedules = classesEntity.schedules.map((schedule) => {
-				const { id, week_day, from, to } = schedule;
-				return { id, week_day, from, to };
+				const { week_day, from, to } = schedule;
+				return { week_day, from, to };
 			});
 			return {
-				id,
-				cost,
-				subject,
 				user,
-				schedules,
+				proffy: {
+					cost,
+					subject,
+					schedules
+				}
 			};
 		});
 
 		return classesFiltered;
+	}
+
+	async filterUserById(id: string) {
+		const user = await getManager()
+			.getRepository(UsersTypeOrm)
+			.findOne({ where: { id } });
+		if (!user) return null;
+		return user;
+	}
+
+	async filterClassByUserId(id: string) {
+		const classe = await getManager()
+			.getRepository(ClassesTypeOrm)
+			.findOne({ where: { userId: id } });
+		if (!classe) return null;
+		return classe;
+	}
+
+	async updateOnlyUser(user: Users) {
+		await getManager().getRepository(UsersTypeOrm).save(new UsersTypeOrm(user));
+	}
+
+	async update(data: IClassListDataRepository) {
+		const { user } = data;
+		const { subject, id, cost, classes } = data.proffy;
+		const classe = new ClassesTypeOrm({ id, userId: user.id, subject, cost });
+
+		const schedules = classes.map((schedule) => {
+			const scheduleEntity = new ClassScheduleTypeOrm(schedule);
+
+			scheduleEntity.class = classe;
+			return scheduleEntity;
+		});
+
+		const oldItems = await getManager()
+			.getRepository(ClassScheduleTypeOrm)
+			.find({ where: { subjectId: classe.id } });
+
+		await getManager().transaction(async (transactionEntityManager) => {
+			await transactionEntityManager.remove(oldItems);
+			await transactionEntityManager.save(new UsersTypeOrm(user));
+			await transactionEntityManager.save(classe);
+			await transactionEntityManager.save(schedules);
+		});
 	}
 }

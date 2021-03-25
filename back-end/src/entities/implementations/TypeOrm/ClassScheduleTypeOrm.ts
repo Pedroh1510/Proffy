@@ -1,5 +1,6 @@
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+
 import { ClassSchedule } from './../../ClassSchedule';
-import { Column, PrimaryColumn, Entity, ManyToOne, JoinColumn } from 'typeorm';
 import { ClassesTypeOrm } from './ClassesTypeOrm';
 
 @Entity('class_schedule')
@@ -22,7 +23,10 @@ export class ClassScheduleTypeOrm implements ClassSchedule {
 	@ManyToOne(() => ClassesTypeOrm, (classes) => classes.id, {
 		cascade: true,
 		onDelete: 'CASCADE',
-		onUpdate: 'CASCADE',
+		onUpdate: 'CASCADE'
 	})
 	class: ClassesTypeOrm;
+
+	@Column()
+	subjectId: string;
 }

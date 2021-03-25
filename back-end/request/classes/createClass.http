@@ -2,15 +2,17 @@ POST http://localhost:3333/classes HTTP/1.1
 content-type: application/json
 
 {
-  "name":"Pedro Henrique",
+  "userId":"4b117022-a17b-41b0-9994-576493c87c89",
+  "name":"teste proffy",
   "avatar":"aefga",
   "whatsapp":"asefa",
   "bio":"asef",
+  "isProffy":false,
   "subject":"Matemática",
   "cost":80,
   "schedule":[
-    { "week_day":1, "from": "8:00","to":"12:00"},
-    { "week_day":3, "from": "10:00","to":"18:00"},
-    { "week_day":4, "from": "8:00","to":"12:00"}
+    { "week_day":1, "from": 8,"to":12},
+    { "week_day":3, "from":10,"to":18},
+    { "week_day":4, "from": 9,"to":11}
   ]
 }

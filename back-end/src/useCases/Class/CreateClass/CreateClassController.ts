@@ -1,6 +1,7 @@
+import { Request, Response } from 'express';
+
 import { ICreateClassRequest } from './CreateClassDTO';
 import { CreateClassUseCase } from './CreateClassUseCase';
-import { Request, Response } from 'express';
 
 export class CreateClassController {
 	constructor(private createClassUseCase: CreateClassUseCase) {}
@@ -12,10 +13,8 @@ export class CreateClassController {
 
 			return response.status(201).send();
 		} catch (error) {
-			console.log(error);
-
 			return response.status(400).json({
-				message: error.message,
+				message: error.message
 			});
 		}
 	}

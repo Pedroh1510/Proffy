@@ -1,35 +1,113 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Image } from "react-native";
+import { useNavigation } from "@react-navigation/core";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Image, ScrollView, Text, View } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 
-import Input from "../../components/Input";
-import Button from "../../components/Button";
-import TopBar from "../../components/TopBar";
-import Dropdown from "../../components/Dropdown";
-
 import profileImg from "../../assets/profile.png";
-
-import { styles } from "./styles";
+import Button from "../../components/Button";
+import Dropdown from "../../components/Dropdown";
+import Input from "../../components/Input";
+import { ProffyProps } from "../../components/TeacherItem";
+import TopBar from "../../components/TopBar";
+import { eraseLogin, getData } from "../../services/storage";
 import { HOUR, MAX_LENGTH, SUBJECTS, WEEK_DAY } from "../../utils/constants";
+import { getDropdownInicialValue } from "../../utils/functions";
+import { styles } from "./styles";
 
 interface TimeProps {
-  dayWeek: string;
+  weekDay: string;
   from: string;
   to: string;
 }
-const initialTime = {
+const initialTime: TimeProps = {
   to: "",
   from: "",
-  dayWeek: "0",
+  weekDay: "0",
 };
 
+export interface UserProps {
+  avatar: string;
+  bio: string;
+  name: string;
+  whatsapp: string;
+  isProffy: string;
+}
+
+export interface ProfileProps {
+  user: UserProps;
+  proffy?: ProffyProps;
+}
+
 const Profile: React.FC = () => {
+  const { navigate } = useNavigation();
   const [time, setTime] = useState<TimeProps[]>([initialTime]);
   const [phone, setPhone] = useState("");
   const [cost, setCost] = useState("");
+  const [name, setName] = useState("");
+  const [bio, setBio] = useState("");
+  const [isProffy, setIsProffy] = useState(false);
+  const [proffy, setProffy] = useState<ProffyProps>();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  useEffect(() => {
+    getData().then((data) => {
+      const { user, proffy } = data as ProfileProps;
+
+      if (user.isProffy === "false") {
+        setUser(user, false);
+      } else {
+        setUser(user, true);
+        setProffy(proffy);
+        if (proffy?.classes) setTime(proffy.classes);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    //é
+    //"https://run.mocky.io/v3/7f0aea0e-3aac-4df1-b184-dee35923a5dd"
+    //não é
+    //"https://run.mocky.io/v3/3b5296e5-fad6-40b8-a148-4b1c3cd0f2ad"
+    axios
+      // .get("https://run.mocky.io/v3/3b5296e5-fad6-40b8-a148-4b1c3cd0f2ad")
+      .get("https://run.mocky.io/v3/7f0aea0e-3aac-4df1-b184-dee35923a5dd")
+      .then((response) => {
+        const { user, proffy } = response.data as ProfileProps;
+
+        // if (user.isProffy === "false") {
+        //   setUser(user, false);
+        // } else {
+        //   setUser(user, true);
+        //   setProffy(proffy);
+        //   if (proffy?.classes) setTime(proffy.classes);
+        // }
+      })
+      .catch((err) => {
+        console.log("Erro");
+      });
+  }, []);
+
+  function setUser(user: UserProps, isTeacher: boolean) {
+    const first = user.name.split(" ")[0];
+    const last = user.name
+      .split(" ")
+      .filter((element, index) => (index !== 0 ? element : null))
+      .join(" ");
+
+    setFirstName(first);
+    setLastName(last);
+
+    setName(user.name);
+    setBio(user.bio);
+    setPhone(user.whatsapp);
+    setName(user.name);
+    setIsProffy(isTeacher);
+  }
 
   function handleAddNewTime() {
-    setTime([...time, { dayWeek: "1", from: "", to: "" }]);
+    setTime([...time, { weekDay: "1", from: "", to: "" }]);
   }
 
   function handleRemoveTime(itemIndex: number) {
@@ -40,6 +118,11 @@ const Profile: React.FC = () => {
       }
     }
     setTime(a);
+  }
+
+  async function handleSave() {
+    await eraseLogin();
+    navigate("Login");
   }
 
   return (
@@ -55,8 +138,8 @@ const Profile: React.FC = () => {
             <RectButton style={styles.headerImage}>
               <Image source={profileImg} style={styles.headerImage} />
             </RectButton>
-            <Text style={styles.headerTitle}>Pedro Henrique</Text>
-            <Text style={styles.headerSubtitle}>Fisica</Text>
+            <Text style={styles.headerTitle}>{name}</Text>
+            <Text style={styles.headerSubtitle}>{proffy?.subject}</Text>
           </View>
         </View>
         <View style={styles.content}>
@@ -65,8 +148,16 @@ const Profile: React.FC = () => {
               <Text style={styles.title}>Seus dados</Text>
             </View>
 
-            <Input title="Nome" />
-            <Input title="Sobrenome" />
+            <Input
+              title="Nome"
+              value={firstName}
+              onChangeText={(value) => setFirstName(value)}
+            />
+            <Input
+              title="Sobrenome"
+              value={lastName}
+              onChangeText={(value) => setLastName(value)}
+            />
 
             <Input
               title="Whatsapp"
@@ -77,12 +168,23 @@ const Profile: React.FC = () => {
               mask="phone"
               keyboardType="phone-pad"
             />
-            <Input multiline maxLength={MAX_LENGTH} title="Bio" />
+            <Input
+              multiline
+              maxLength={MAX_LENGTH}
+              title="Bio"
+              value={bio}
+              onChangeText={(text) => setBio(text)}
+            />
 
             <View style={styles.containerTitle}>
               <Text style={styles.title}>Sobre a aula</Text>
             </View>
-            <Dropdown items={SUBJECTS} title="Materia" />
+            <Dropdown
+              items={SUBJECTS}
+              title="Materia"
+              disabled={!isProffy}
+              defaultValue={getDropdownInicialValue(proffy?.subject, SUBJECTS)}
+            />
             <Input
               title="Custo por hora"
               // placeholder="R$ xx,xx"
@@ -90,11 +192,12 @@ const Profile: React.FC = () => {
               inputChange={(text: string) => setCost(text)}
               keyboardType="phone-pad"
               value={cost}
+              editable={isProffy}
             />
 
             <View style={styles.containerTitle}>
               <Text style={styles.title}>Horários disponíveis</Text>
-              <RectButton onPress={() => handleAddNewTime()}>
+              <RectButton onPress={() => handleAddNewTime()} enabled={isProffy}>
                 <Text style={styles.containerHourButtonText}>+ Novo</Text>
               </RectButton>
             </View>
@@ -107,6 +210,7 @@ const Profile: React.FC = () => {
                       onPress={() => {
                         handleRemoveTime(index);
                       }}
+                      enabled={isProffy}
                     >
                       <Text style={styles.containerHourButtonExcludeText}>
                         Excluir Aula
@@ -114,17 +218,45 @@ const Profile: React.FC = () => {
                     </RectButton>
                   ) : null}
 
-                  <Dropdown items={WEEK_DAY} title="Dia da Semana" />
+                  <Dropdown
+                    items={WEEK_DAY}
+                    title="Dia da Semana"
+                    disabled={!isProffy}
+                    defaultValue={getDropdownInicialValue(
+                      parseInt(classes.weekDay),
+                      WEEK_DAY
+                    )}
+                  />
                   <View style={styles.containerHourInput}>
-                    <Dropdown items={HOUR} title="Das" />
-                    <Dropdown items={HOUR} title="Até" />
+                    <Dropdown
+                      items={HOUR}
+                      title="Das"
+                      disabled={!isProffy}
+                      defaultValue={getDropdownInicialValue(
+                        parseInt(classes.from),
+                        HOUR
+                      )}
+                    />
+                    <Dropdown
+                      items={HOUR}
+                      title="Até"
+                      disabled={!isProffy}
+                      defaultValue={getDropdownInicialValue(
+                        parseInt(classes.to),
+                        HOUR
+                      )}
+                    />
                   </View>
                 </View>
               );
             })}
           </View>
           <View style={styles.footer}>
-            <Button text="Salvar cadastro" source="OkGiveClasses" />
+            <Button
+              text="Salvar cadastro"
+              isEnabled={isProffy}
+              onPress={() => handleSave()}
+            />
           </View>
         </View>
       </ScrollView>

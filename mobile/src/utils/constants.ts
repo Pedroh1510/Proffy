@@ -22,4 +22,5 @@ export const SUBJECTS = [
   { label: "Biologia", value: 1 },
   { label: "Ciência", value: 2 },
 ];
+
 export const MAX_LENGTH = 255;

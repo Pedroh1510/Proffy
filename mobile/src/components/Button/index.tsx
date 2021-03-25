@@ -1,24 +1,23 @@
-import { useNavigation } from "@react-navigation/core";
 import React from "react";
-import { View, Text } from "react-native";
+import { Text } from "react-native";
 import { RectButton, RectButtonProperties } from "react-native-gesture-handler";
 import { styles } from "./styles";
 
-// import { Container } from './styles';
-
 interface ButtonProps extends RectButtonProperties {
   text: string;
-  source: string;
+  isEnabled?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ text, source, ...rest }) => {
-  const { navigate } = useNavigation();
-  function handleGoTo() {
-    navigate(source);
-  }
+const Button: React.FC<ButtonProps> = ({ text, isEnabled, ...rest }) => {
   return (
-    <RectButton {...rest} style={styles.button} onPress={() => handleGoTo()}>
-      <Text style={styles.buttonText}>{text}</Text>
+    <RectButton
+      style={isEnabled ? styles.button : styles.buttonDisable}
+      enabled={isEnabled}
+      {...rest}
+    >
+      <Text style={isEnabled ? styles.buttonText : styles.buttonTextDisable}>
+        {text}
+      </Text>
     </RectButton>
   );
 };

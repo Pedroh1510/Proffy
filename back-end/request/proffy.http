@@ -1,0 +1,57 @@
+POST http://localhost:3333/register HTTP/1.1
+content-type: application/json
+
+{
+  "name":"teste proffy",
+  "email": "proffy@test.com",
+  "password": "Test0-"
+}
+
+###
+POST http://localhost:3333/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "proffy@test.com",
+  "password": "Test0-"
+}
+
+###
+POST http://localhost:3333/classes HTTP/1.1
+content-type: application/json
+
+{
+  "userId":"3598d2e1-aa49-48e0-938a-7f491402dc97",
+  "name":"teste proffy",
+  "avatar":"aefga",
+  "whatsapp":"asefa",
+  "bio":"asef",
+  "isProffy":false,
+  "subject":"Matemática",
+  "cost":80,
+  "schedule":[
+    { "week_day":1, "from": 8,"to":12},
+    { "week_day":3, "from":10,"to":18},
+    { "week_day":4, "from": 9,"to":11}
+  ]
+}
+
+###
+PUT http://localhost:3333/classes HTTP/1.1
+content-type: application/json
+
+{
+  "userId":"3598d2e1-aa49-48e0-938a-7f491402dc97",
+  "name":"Pedro Proffy",
+  "avatar":"aefga",
+  "whatsapp":"asefa",
+  "bio":"asef",
+  "isProffy":false,
+  "subject":"Matemática",
+  "cost":80,
+  "schedule":[
+    { "week_day":5, "from": 8,"to":12},
+    { "week_day":3, "from":10,"to":18},
+    { "week_day":4, "from": 9,"to":11}
+  ]
+}
