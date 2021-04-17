@@ -1,27 +1,33 @@
+@name = gui
+@email = gui@test.com
+@password = test1234
+
+# @name register
 POST http://localhost:3333/register HTTP/1.1
 content-type: application/json
 
 {
-  "name":"teste proffy",
-  "email": "proffy@test.com",
-  "password": "Test0-"
+  "name":"{{name}}",
+  "email": "{{email}}",
+  "password": "{{password}}"
 }
-
 ###
+#  @name login
 POST http://localhost:3333/login HTTP/1.1
 content-type: application/json
 
 {
-  "email": "proffy@test.com",
-  "password": "Test0-"
+  "email": "{{email}}",
+  "password": "{{password}}"
 }
-
 ###
+
+# @name ProffyRegister
 POST http://localhost:3333/classes HTTP/1.1
 content-type: application/json
 
 {
-  "userId":"3598d2e1-aa49-48e0-938a-7f491402dc97",
+  "userId":"{{login.response.body.user.id}}",
   "name":"teste proffy",
   "avatar":"aefga",
   "whatsapp":"asefa",
@@ -35,18 +41,19 @@ content-type: application/json
     { "week_day":4, "from": 9,"to":11}
   ]
 }
-
 ###
+
+# @name ProfileUpdate
 PUT http://localhost:3333/classes HTTP/1.1
 content-type: application/json
 
 {
-  "userId":"3598d2e1-aa49-48e0-938a-7f491402dc97",
+  "userId":"95f7adfd-a6f9-44c8-ac2a-55916a0ecfb8",
   "name":"Pedro Proffy",
   "avatar":"aefga",
   "whatsapp":"asefa",
   "bio":"asef",
-  "isProffy":false,
+  "isProffy":true,
   "subject":"Matemática",
   "cost":80,
   "schedule":[

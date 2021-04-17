@@ -74,6 +74,35 @@ export class ClassRepositoryTypeOrm implements IClassRepository {
 		return classesFiltered;
 	}
 
+	async getAll() {
+		// const classes = await getManager().query('SELECT * FROM classes');
+		const classes = await getManager()
+			.getRepository(ClassesTypeOrm)
+			.createQueryBuilder('classes')
+			.innerJoinAndSelect('classes.user_id', 'users')
+			.leftJoinAndSelect('classes.schedules', 'schedules')
+			.getMany();
+
+		console.log(classes);
+		const classesFiltered = classes.map((classesEntity) => {
+			const { cost, subject } = classesEntity;
+			const user = { ...classesEntity.user_id };
+			const schedules = classesEntity.schedules.map((schedule) => {
+				const { week_day, from, to } = schedule;
+				return { week_day, from, to };
+			});
+			return {
+				user,
+				proffy: {
+					cost,
+					subject,
+					schedules
+				}
+			};
+		});
+		return classesFiltered;
+	}
+
 	async filterUserById(id: string) {
 		const user = await getManager()
 			.getRepository(UsersTypeOrm)
@@ -97,6 +126,8 @@ export class ClassRepositoryTypeOrm implements IClassRepository {
 	async update(data: IClassListDataRepository) {
 		const { user } = data;
 		const { subject, id, cost, classes } = data.proffy;
+		console.log(classes);
+
 		const classe = new ClassesTypeOrm({ id, userId: user.id, subject, cost });
 
 		const schedules = classes.map((schedule) => {

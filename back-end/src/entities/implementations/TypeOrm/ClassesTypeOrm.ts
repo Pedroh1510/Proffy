@@ -32,6 +32,6 @@ export class ClassesTypeOrm implements Classes {
 	@ManyToOne(() => UsersTypeOrm, (user) => user.id)
 	user_id: UsersTypeOrm;
 
-	@Column()
+	@Column({ unique: true })
 	userId: string;
 }

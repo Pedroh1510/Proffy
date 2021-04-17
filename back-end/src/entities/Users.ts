@@ -16,5 +16,6 @@ export class Users {
 		if (!this.isProffy) {
 			this.isProffy = false;
 		}
+		this.avatar = 'a';
 	}
 }

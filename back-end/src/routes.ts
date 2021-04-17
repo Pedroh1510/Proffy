@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import { sendMail } from './services/mailer';
 import { loginController } from './useCases/Access/Login';
 import { registerController } from './useCases/Access/Register';
 import { removeController } from './useCases/Access/Remove';
@@ -10,6 +11,15 @@ import { countConnectionsController } from './useCases/Connection/CountConnectio
 import { createConnectionController } from './useCases/Connection/CreateConnection';
 
 const routes = Router();
+
+routes.get('/', async (req, res) => {
+	await sendMail({
+		to: 'pedroh1510@hotmail.com',
+		subject: 'test',
+		text: 'teste'
+	});
+	return res.send('ok');
+});
 
 routes.post('/login', (req, res) => {
 	return loginController.handle(req, res);

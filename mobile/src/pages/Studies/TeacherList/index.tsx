@@ -1,5 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-community/async-storage";
+import { useFocusEffect } from "@react-navigation/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
@@ -36,36 +37,36 @@ const TeacherList: React.FC = () => {
     });
   }
 
-  useEffect(() => {
-    axios
-      .get("https://run.mocky.io/v3/12e5332e-9035-451b-ba60-944804630f10")
-      .then((response) => {
-        const data = response.data;
+  function getListTeachers() {
+    api.get("classes").then((response) => {
+      setTeachers(response.data);
+    });
+  }
 
-        setTeachers(data);
-      });
-    // api.get("connections").then((response) => {
-    //   const { total } = response.data;
-    //   setTotalConnections(total);
-    // });
+  useEffect(() => {
+    getListTeachers();
+  }, []);
+
+  useFocusEffect(() => {
+    getListTeachers();
   });
 
   function handleToggleFiltersVisible() {
-    setIsFiltersVisible(!isFiltersVisible);
+    setIsFiltersVisible(false);
+    // setIsFiltersVisible(!isFiltersVisible);
   }
 
   async function handleSubmitFilter() {
-    loadFavorites();
-    const response = await api.get("classes", {
-      params: {
-        subject,
-        week_day,
-        time,
-      },
-    });
-
-    setTeachers(response.data);
-    setIsFiltersVisible(false);
+    // loadFavorites();
+    // const response = await api.get("classes", {
+    //   params: {
+    //     subject,
+    //     week_day,
+    //     time,
+    //   },
+    // });
+    // setTeachers(response.data);
+    // setIsFiltersVisible(false);
   }
 
   return (

@@ -6,12 +6,14 @@ export class ListClassUseCase {
 	async execute(data: IListRequest) {
 		const { week_day, time, subject } = data;
 
-		const classes = await this.classRepository.filter({
-			subject,
-			time,
-			week_day
-		});
-
-		return classes;
+		if (week_day || time || subject) {
+			return await this.classRepository.filter({
+				subject,
+				time,
+				week_day
+			});
+		} else {
+			return await this.classRepository.getAll();
+		}
 	}
 }

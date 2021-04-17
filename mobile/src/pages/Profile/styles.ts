@@ -119,6 +119,20 @@ const styles = StyleSheet.create({
   footerText: {
     color: "#A0A0B3",
   },
+
+  button: {
+    marginTop: 10,
+    backgroundColor: "#DF0000",
+    height: 58,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontFamily: "Archivo_700Bold",
+  },
 });
 
 export { styles };

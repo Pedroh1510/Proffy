@@ -17,10 +17,15 @@ export class UpdateClassUseCase {
 			subject
 		} = data;
 
-		if (isProffy === undefined) throw new Error("Missing param 'isProffy'");
+		console.log(data);
+
+		if (isProffy === undefined || isProffy === null)
+			throw new Error("Missing param 'isProffy'");
 		if (!name) throw new Error("Missing param 'name'");
 		if (!userId) throw new Error("Missing param 'userId'");
 		const user = await this.classRepository.filterUserById(userId);
+
+		if (!user) throw new Error("User doesn't exist");
 
 		user.avatar = avatar;
 		user.bio = bio;

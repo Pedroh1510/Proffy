@@ -1,23 +1,22 @@
+import { Ionicons } from "@expo/vector-icons";
 import CheckBox from "@react-native-community/checkbox";
-import React, { useEffect, useState } from "react";
-import { TextInput, View, Text, Image } from "react-native";
-import { BorderlessButton, RectButton } from "react-native-gesture-handler";
-import { useNavigation } from "@react-navigation/core";
+import { useFocusEffect, useNavigation } from "@react-navigation/core";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Image, Text, TextInput, View } from "react-native";
+import { BorderlessButton, RectButton } from "react-native-gesture-handler";
 import { Snackbar } from "react-native-paper";
 
-import { Ionicons } from "@expo/vector-icons";
-
 import loginImg from "../../../assets/images/logo.png";
-import Default from "../../../components/Default";
 import Button from "../../../components/Button";
-
-import { styles } from "./styles";
+import Default from "../../../components/Default";
+import { api } from "../../../services/api";
 import { isLogged, saveLogin, storeData } from "../../../services/storage";
+import { styles } from "./styles";
 
 const Login: React.FC = () => {
-  const [isChecked, setIsChecked] = useState(false);
   const { navigate } = useNavigation();
+  const [isChecked, setIsChecked] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isOk, setIsOk] = useState(false);
   const [email, setEmail] = useState("");
@@ -25,6 +24,7 @@ const Login: React.FC = () => {
   const [visibleSnackbar, setVisibleSnackbar] = useState(false);
 
   useEffect(() => {
+    setPassword("");
     isLogged().then((data) => {
       if (data) navigate("Landing");
     });
@@ -39,17 +39,17 @@ const Login: React.FC = () => {
   }, [email, password]);
 
   function handleLogin() {
-    //tem acesso sem proffy
-    //https://run.mocky.io/v3/ebf01d79-ab01-446b-be67-62071c1cae42
-    //sem acesso
-    //https://run.mocky.io/v3/13f58c57-0e91-4661-8205-8f7f6799bf7c
-    axios
-      .get("https://run.mocky.io/v3/ebf01d79-ab01-446b-be67-62071c1cae42")
-      // .get("https://run.mocky.io/v3/13f58c57-0e91-4661-8205-8f7f6799bf7c")
+    api
+      .post("login", { email, password })
       .then(async (response) => {
         if (response.status === 202) {
           await storeData(response.data);
           if (isChecked) await saveLogin(response.data);
+          setEmail("");
+          setPassword("");
+          setIsChecked(false);
+          setIsVisible(false);
+          resetData();
           navigate("Landing");
         } else {
           setVisibleSnackbar(true);
@@ -58,6 +58,12 @@ const Login: React.FC = () => {
       .catch(() => {
         setVisibleSnackbar(true);
       });
+  }
+
+  function resetData() {
+    setEmail("");
+    setPassword("");
+    setIsChecked(false);
   }
 
   const onDismissSnackBar = () => setVisibleSnackbar(false);
@@ -75,7 +81,11 @@ const Login: React.FC = () => {
       <View style={styles.container}>
         <View style={styles.subContainer}>
           <Text style={styles.title}>Fazer login</Text>
-          <RectButton>
+          <RectButton
+            onPress={() => {
+              navigate("Register");
+            }}
+          >
             <Text style={styles.register}>Criar uma conta</Text>
           </RectButton>
         </View>
@@ -85,6 +95,7 @@ const Login: React.FC = () => {
           placeholder="E-mail"
           keyboardType="email-address"
           onChangeText={(e) => setEmail(e)}
+          value={email}
         />
         <View style={styles.containerPass}>
           <TextInput
@@ -93,6 +104,7 @@ const Login: React.FC = () => {
             autoCompleteType="password"
             secureTextEntry={!isVisible}
             onChangeText={(e) => setPassword(e)}
+            value={password}
           />
           <BorderlessButton onPress={() => setIsVisible(!isVisible)}>
             {isVisible ? (

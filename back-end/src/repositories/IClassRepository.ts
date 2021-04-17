@@ -20,13 +20,21 @@ interface ProffyUpdateProps {
 }
 
 export interface IClassListDataRepository {
-	user: UserProps;
+	user: {
+		id: string;
+		name: string;
+		bio: string;
+		whatsapp: string;
+		avatar: string;
+		isProffy: boolean;
+	};
 	proffy: ProffyUpdateProps;
 }
 
 export interface IClassRepository {
 	save(data: IClassSaveDataRepository): Promise<void>;
 	filter(data: IClassFilterDataRepository): Promise<IClassListDataRepository[]>;
+	getAll(): Promise<IClassListDataRepository[]>;
 	filterUserById(id: string): Promise<Users>;
 	filterClassByUserId(id: string): Promise<Classes>;
 	updateOnlyUser(user: Users): Promise<void>;

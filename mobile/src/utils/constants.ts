@@ -21,6 +21,7 @@ export const SUBJECTS = [
   { label: "Artes", value: 0 },
   { label: "Biologia", value: 1 },
   { label: "Ciência", value: 2 },
+  { label: "Matemática", value: 3 },
 ];
 
 export const MAX_LENGTH = 255;

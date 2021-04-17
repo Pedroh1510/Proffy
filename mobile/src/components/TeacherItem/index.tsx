@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { View, Image, Text, Linking } from "react-native";
-import { RectButton } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-community/async-storage";
+import React, { useEffect, useState } from "react";
+import { Image, Linking, Text, View } from "react-native";
+import { RectButton } from "react-native-gesture-handler";
 
 import heartOutlineIcon from "../../assets/images/icons/heart-outline.png";
 import unfavoriteIcon from "../../assets/images/icons/unfavorite.png";
 import whatsappIcon from "../../assets/images/icons/whatsapp.png";
-
-import styles from "./styles";
+import profileImg from "../../assets/profile.png";
 import { api } from "../../services/api";
 import WeekDay from "../WeekDay";
+import styles from "./styles";
 
 export interface Teacher {
   user: UserPros;
@@ -27,13 +27,13 @@ export interface UserPros {
 export interface ProffyProps {
   subject: string;
   cost: number;
-  classes: ClassesProps[];
+  schedules: ClassesProps[];
 }
 
 export interface ClassesProps {
-  weekDay: string;
-  from: string;
-  to: string;
+  week_day: number;
+  from: number;
+  to: number;
 }
 
 export interface TeacherItemProps {
@@ -90,12 +90,12 @@ const TeacherItem: React.FC<TeacherItemProps> = ({ teacher, favorited }) => {
   }
 
   function getClasses() {
-    const classes: ClassesProps[] = teacher.proffy.classes;
+    const classes: ClassesProps[] = teacher.proffy.schedules;
     const a = [];
 
     for (let index = 1; index < 6; index++) {
       const q = classes.filter((item) => {
-        if (item.weekDay === index.toString()) return item;
+        if (item.week_day === index) return item;
         return null;
       });
 
@@ -103,7 +103,8 @@ const TeacherItem: React.FC<TeacherItemProps> = ({ teacher, favorited }) => {
 
       if (q.length) {
         const { to, from } = q[0];
-        a.push(<WeekDay day={day} key={day} hour={`${to}h - ${from}h`} />);
+
+        a.push(<WeekDay day={day} key={day} hour={`${from}h - ${to}h`} />);
       } else {
         a.push(<WeekDay day={day} key={day} hour={` - `} opacity />);
       }
@@ -115,12 +116,7 @@ const TeacherItem: React.FC<TeacherItemProps> = ({ teacher, favorited }) => {
   return (
     <View style={styles.container}>
       <View style={styles.profile}>
-        <Image
-          style={styles.avatar}
-          source={{
-            uri: teacher.user.avatar,
-          }}
-        />
+        <Image style={styles.avatar} source={profileImg} />
 
         <View style={styles.profileInfo}>
           <Text style={styles.name}>{teacher.user.name}</Text>

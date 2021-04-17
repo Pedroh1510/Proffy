@@ -1,21 +1,19 @@
+import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, Image } from "react-native";
+import { Image, ScrollView, Text, View } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 
-import { styles } from "./styles";
-import { AntDesign } from "@expo/vector-icons";
-
-import Input from "../../../components/Input";
 import profileImg from "../../../assets/profile.png";
 import Button from "../../../components/Button";
-import TopBar from "../../../components/TopBar";
 import Dropdown from "../../../components/Dropdown";
-
+import Input from "../../../components/Input";
+import { ProffyProps } from "../../../components/TeacherItem";
+import TopBar from "../../../components/TopBar";
+import { getData } from "../../../services/storage";
 import { HOUR, MAX_LENGTH, SUBJECTS, WEEK_DAY } from "../../../utils/constants";
 import { ProfileProps, UserProps } from "../../Profile";
-import { ProffyProps } from "../../../components/TeacherItem";
-import { getData } from "../../../services/storage";
-import { useNavigation } from "@react-navigation/core";
+import { styles } from "./styles";
 
 interface TimeProps {
   dayWeek: string;
@@ -47,7 +45,7 @@ const RegisterGiveClasses: React.FC = () => {
     getData().then((data) => {
       const { user, proffy } = data as ProfileProps;
 
-      if (user.isProffy === "false") {
+      if (user.isProffy === false) {
         setUser(user, false);
       } else {
         setUser(user, true);
@@ -123,7 +121,7 @@ const RegisterGiveClasses: React.FC = () => {
             </View>
             <View style={styles.profile}>
               <Image
-                source={avatar !== "a" ? avatar : profileImg}
+                source={profileImg}
                 style={styles.image}
                 resizeMode="contain"
               />

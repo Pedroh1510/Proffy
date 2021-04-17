@@ -1,9 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { ImageBackground, Text, View } from "react-native";
+import { Image, ImageBackground, Text, View } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 
 import giveClassesBgImg from "../../assets/images/give-classes-background.png";
+import readyImg from "../../assets/images/ready.png";
 import { eraseLogin } from "../../services/storage";
 import { styles } from "./styles";
 
@@ -32,6 +33,7 @@ const OkPage: React.FC<OkPageProps> = ({ button, content }) => {
         source={giveClassesBgImg}
         style={styles.content}
       >
+        <Image source={readyImg} />
         <Text style={styles.title}>{content.title}</Text>
         <Text style={styles.description}>{content.text}</Text>
       </ImageBackground>

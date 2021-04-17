@@ -21,9 +21,9 @@ PUT http://localhost:3333/classes HTTP/1.1
 content-type: application/json
 
 {
-  "userId":"e46172a4-6bcb-40f9-8206-6de207dc432f",
+  "userId":"16e18c5c-58d4-4eb8-8afd-a744d7c1a760",
   "name":"Pedro user",
-  "avatar":"aefga",
+  "avatar":"a",
   "whatsapp":"asefa",
   "bio":"asef",
   "isProffy":false

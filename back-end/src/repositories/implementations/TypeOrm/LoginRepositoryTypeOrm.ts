@@ -30,6 +30,15 @@ export class LoginRepository implements ILoginRepository {
 			.findOne({ where: { id: loginData.userId } });
 
 		if (user === undefined) return null;
+		if (user.isProffy) {
+			const proffy = await connection
+				.getRepository(ClassesTypeOrm)
+				.createQueryBuilder('classes')
+				.leftJoinAndSelect('classes.schedules', 'schedules')
+				.where('classes.userId ', { userId: user.id })
+				.getOne();
+			return { user, proffy };
+		}
 		return { user };
 	}
 

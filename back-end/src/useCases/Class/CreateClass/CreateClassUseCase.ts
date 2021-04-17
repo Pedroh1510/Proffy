@@ -35,6 +35,9 @@ export class CreateClassUseCase {
 
 		if (!user) throw new Error('Invalid userId');
 
+		user.bio = bio;
+		user.whatsapp = whatsapp;
+
 		user.isProffy = true;
 		const classFromUser = new Classes({ cost, subject, userId });
 
